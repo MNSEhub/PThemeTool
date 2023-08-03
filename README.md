@@ -1,2 +1,2 @@
 # PThemeTool
-Color changer too for processing theme
+Color changer tool for processing theme
