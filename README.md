@@ -1,6 +1,8 @@
 # PThemeTool
 ### _Color changer tool for processing theme_
 
+> Requires Processing 4.2+
+
 ## Download
 [PThemeTool-1.0.0-beta1](https://github.com/MNSEhub/PThemeTool/blob/develop/distribution/PThemeTool-1.0.0-beta1/download/PThemeTool-1.0.0-beta1.zip)
 
