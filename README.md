@@ -1,8 +1,8 @@
 # PThemeTool
-Color changer tool for processing theme
+### _Color changer tool for processing theme_
 
-# installation
+## installation
 extract the zip file to the processing sketchbook/tool directory.
 
-# de-installation
+## de-installation
 remove the PThemeTool folder from sketchbook/tool directory.
