@@ -13,7 +13,7 @@ extract the zip file to the processing sketchbook/tool directory.
 remove the PThemeTool folder from sketchbook/tool directory.
 
 ## Example Video
-https://github.com/MNSEhub/PThemeTool/assets/141053966/4ea6e0b4-d964-4c0e-89f6-6ec3ed484f84
+https://github.com/MNSEhub/PThemeTool/assets/141053966/f1f6db71-dab3-41b4-863f-f927c0fe1059
 
 ## TODO
 * switch from Ant to Maven build
