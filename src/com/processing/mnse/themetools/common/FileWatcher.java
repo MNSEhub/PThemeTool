@@ -107,7 +107,7 @@ public final class FileWatcher implements Runnable {
     */
    private void reloadFile() {
       try {
-         Log.info("Reloading file");
+         Log.debug("Reloading file");
          MainContext.instance().reloadFile();
       } catch (Exception e) {
          Log.error("Issues loading file !?");

@@ -116,7 +116,7 @@ public final class MainContext {
          settings = (Settings) field.get(null);
          Log.info("Settings available!");
       } catch (NoSuchFieldException|SecurityException|IllegalArgumentException|IllegalAccessException e) {
-         Log.info("Settings not available! :/");
+         Log.warning("Settings not available! :/");
          throw new Exception("Settings not accessable! :/\n",e);
       }
       
@@ -134,7 +134,7 @@ public final class MainContext {
       try (InputStream is = getClass().getResourceAsStream("/SourceCodePro-Medium.ttf")) {
          globalFont = Font.createFont(Font.TRUETYPE_FONT, is);
       } catch (FontFormatException | IOException e) {
-         Log.warning("Unable to load font : ");
+         Log.debug("Unable to load font : ");
       }      
    }
    
@@ -336,7 +336,7 @@ public final class MainContext {
             }
          }
       } catch (IOException e) {
-         Log.info("errors reading: " + kwfile);
+         Log.warning("errors reading keywords: " + kwfile);
       }
    }
 

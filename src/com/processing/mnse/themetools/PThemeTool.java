@@ -98,10 +98,10 @@ public class PThemeTool implements Tool {
                ctx.setMainPanel(new PThemePanel(ctx));
                ctx.getEditor().add(ctx.getMainPanel(), BorderLayout.EAST);
                ctx.getEditor().pack();
-               Log.info("*** loading ##tool.name## done!");
+               Log.info("*** success initialized ##tool.name##!");
             } catch (Exception e) {
-               Log.error("Error on loading ##tool.name##: " + e.getMessage());
-               e.printStackTrace();
+               Log.error("Error on initialize ##tool.name##: " + e.getMessage());
+               MainContext.destroy();                  
             }
          });
       } catch (Exception e) {

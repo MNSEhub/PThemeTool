@@ -80,10 +80,6 @@ public final class StyleCellEditor extends AbstractCellEditor implements TableCe
     */
    @Override
    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-      if (value == null) {
-         switchButton.setBackground(Color.GREEN);
-         return switchButton;
-      }
       if (ThemeToolsHelper.VALUE_NOT_AVAILABLE.equals(value)) {
          switchButton.setText(ThemeToolsHelper.VALUE_NOT_AVAILABLE);
       } else {

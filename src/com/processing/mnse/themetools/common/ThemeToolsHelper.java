@@ -80,12 +80,22 @@ public final class ThemeToolsHelper {
     * @param color the color
     * @return the contrast color
     */
-   public static Color getContrastColor(Color color) {
+   public static float getLuminance(Color color) {
       float[] rgb = color.getRGBColorComponents(null);
       float luminance = 0.299f * rgb[0] + 0.587f * rgb[1] + 0.114f * rgb[2];
-      return luminance > 0.5 ? Color.BLACK : Color.WHITE;
+      return luminance;
    }
 
+   /**
+    * Gets the contrast color.
+    *
+    * @param color the color
+    * @return the contrast color
+    */
+   public static Color getContrastColor(Color color) {
+      return getLuminance(color) > 0.5 ? Color.BLACK : Color.WHITE;
+   }
+   
    /**
     * To hex color string.
     *

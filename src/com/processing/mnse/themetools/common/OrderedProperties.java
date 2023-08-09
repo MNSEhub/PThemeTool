@@ -88,7 +88,7 @@ public final class OrderedProperties extends Properties {
          load(fis);
       }
       print();
-      Log.info("properties loaded from: " + filename);
+      Log.debug("properties loaded from: " + filename);
    }
 
    /**

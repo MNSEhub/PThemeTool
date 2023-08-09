@@ -1,8 +1,11 @@
 package com.processing.mnse.themetools.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +46,7 @@ public final class PThemePanel extends JPanel {
    public PThemePanel(MainContext ctx) throws Exception {
       this.ctx = ctx;
       this.setName("mainPanel");
-      this.setUI(new BasicPanelUI());      
+      this.setUI(new BasicPanelUI());
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
       add(createLabel());
       add(createTables());
@@ -54,9 +57,9 @@ public final class PThemePanel extends JPanel {
    @Override
    protected void paintComponent(Graphics g) {
       setBackground(Theme.getColor(ThemeToolsHelper.JPANEL_BGCOLOR_ATTR));
-      super.paintComponent(g);
+      super.paintComponent(g);  
    }
-   
+
    @Override
    protected void paintBorder(Graphics g) {
       setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Theme.getColor(ThemeToolsHelper.JPANEL_BORDER_COLOR_ATTR)));
@@ -72,9 +75,18 @@ public final class PThemePanel extends JPanel {
       JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 2)) {
          @Override
          protected void paintComponent(Graphics g) {
-            setBackground(Theme.getColor("editor.gradient.top"));
+            Color color = Theme.getColor("editor.gradient.top"); 
+            setBackground(color);
             super.paintComponent(g);
-         }         
+            String watermark = "mnse  ";
+            Font watermarkFont = g.getFont().deriveFont(Font.BOLD,14f);
+            g.setFont(watermarkFont);
+            FontMetrics metrics = g.getFontMetrics(watermarkFont);
+            int x = (getWidth() - metrics.stringWidth(watermark));
+            int y = (getHeight() - metrics.getHeight()) / 2 + metrics.getAscent();
+            g.setColor(ThemeToolsHelper.getLuminance(color) > 0.5 ? color.darker() : color.brighter());            
+            g.drawString(watermark, x, y);                         
+         }
       };
       headerPanel.setName("headerPanel");
       headerPanel.setBorder(BorderFactory.createEmptyBorder());
@@ -86,11 +98,10 @@ public final class PThemePanel extends JPanel {
             super.paintComponent(g);
          }
       };
-      header.setSize(new Dimension(this.getWidth(), 40));
+      header.setSize(new Dimension(this.getWidth(), 40));      
       headerPanel.add(header);
       return headerPanel;
    }
-
    /**
     * Creates the buttons.
     *
@@ -102,7 +113,7 @@ public final class PThemePanel extends JPanel {
          protected void paintComponent(Graphics g) {
             setBackground(Theme.getColor("editor.gradient.bottom"));
             super.paintComponent(g);
-         }        
+         }
       };
       buttonPanel.setName("buttonPanel");
       buttonPanel.setBorder(BorderFactory.createEmptyBorder());
@@ -123,7 +134,7 @@ public final class PThemePanel extends JPanel {
       });
       buttonPanel.add(btnSave);
 
-      JButton btnRevert = new JButton("Revert"){
+      JButton btnRevert = new JButton("Revert") {
          @Override
          protected void paintComponent(Graphics g) {
             setBackground(Theme.getColor("header.tab.selected.color"));
@@ -140,7 +151,7 @@ public final class PThemePanel extends JPanel {
 
       buttonPanel.add(btnRevert);
 
-      JButton btnClose = new JButton("Close"){
+      JButton btnClose = new JButton("Close") {
          @Override
          protected void paintComponent(Graphics g) {
             setBackground(Theme.getColor("header.tab.selected.color"));
@@ -165,29 +176,29 @@ public final class PThemePanel extends JPanel {
     * @return the JPanel
     */
    public JPanel createTables() {
-      JPanel tablePanel = new JPanel(new BorderLayout()) {         
+      JPanel tablePanel = new JPanel(new BorderLayout()) {
          @Override
-         protected void paintBorder(Graphics g) {            
+         protected void paintBorder(Graphics g) {
             setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, Theme.getColor(ThemeToolsHelper.JPANEL_BORDER_COLOR_ATTR)));
             super.paintBorder(g);
-         }         
+         }
       };
       PThemeTabbedPane tabbedPane = new PThemeTabbedPane();
       tabbedPane.setBorder(BorderFactory.createEmptyBorder());
-     
-      ThemeToolsHelper.GROUP_ITEMS.forEach((k,v) -> {
-         JScrollPane scroll = new JScrollPane(new ThemeTable(ctx,k,v)) {
+
+      ThemeToolsHelper.GROUP_ITEMS.forEach((k, v) -> {
+         JScrollPane scroll = new JScrollPane(new ThemeTable(ctx, k, v)) {
             @Override
             public void paint(Graphics g) {
                setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Theme.getColor(ThemeToolsHelper.JPANEL_BORDER_COLOR_ATTR)));
                if (getVerticalScrollBar().getUI() instanceof PdeScrollBarUI)
-                  ((PdeScrollBarUI)getVerticalScrollBar().getUI()).updateTheme();                
+                  ((PdeScrollBarUI) getVerticalScrollBar().getUI()).updateTheme();
                super.paint(g);
             }
-         };         
+         };
          scroll.getVerticalScrollBar().setUI(new PdeScrollBarUI(ThemeToolsHelper.PDE_SCROLLBAR_UI_ATTR));
-         tabbedPane.addTab(k, scroll);         
-      });      
+         tabbedPane.addTab(k, scroll);
+      });
       tablePanel.add(tabbedPane, BorderLayout.CENTER);
       return tablePanel;
    }
