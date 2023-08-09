@@ -11,7 +11,6 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-import com.processing.mnse.themetools.common.MainContext;
 import com.processing.mnse.themetools.common.ThemeToolsHelper;
 
 /**
@@ -33,14 +32,14 @@ public final class StyleCellEditor extends AbstractCellEditor implements TableCe
    private JButton            switchButton;
    
    /** The parent table. */
-   private JTable             parentTable;
+   private ThemeTable         parentTable;
 
    /**
     * Instantiates a new style cell editor.
     *
     * @param parent the parent
     */
-   public StyleCellEditor(JTable parent) {
+   public StyleCellEditor(ThemeTable parent) {
       parentTable = parent;
       switchButton = new JButton();
       switchButton.addActionListener(this);
@@ -56,7 +55,7 @@ public final class StyleCellEditor extends AbstractCellEditor implements TableCe
       switchButton.setText(PLAIN.equals(switchButton.getText()) ? BOLD : PLAIN);
       final int row = parentTable.getEditingRow();
       fireEditingStopped();
-      EventQueue.invokeLater(() -> MainContext.instance().getMainTable().updatePropertyFromTable(row));
+      EventQueue.invokeLater(() -> parentTable.updatePropertyFromTable(row));
    }
    
    /**

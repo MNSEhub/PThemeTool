@@ -1,6 +1,5 @@
 package com.processing.mnse.themetools.common;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -10,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -18,12 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
 import com.processing.mnse.themetools.gui.PThemePanel;
 import com.processing.mnse.themetools.logging.Log;
 import com.processing.mnse.themetools.table.ThemeTable;
@@ -31,7 +25,7 @@ import com.processing.mnse.themetools.table.ThemeTable;
 import processing.app.Base;
 import processing.app.Mode;
 import processing.app.Preferences;
-import processing.app.laf.PdeScrollBarUI;
+import processing.app.Settings;
 import processing.app.ui.Editor;
 import processing.app.ui.Theme;
 
@@ -46,9 +40,6 @@ public final class MainContext {
    /** The context instance. */
    private static MainContext        context;
    
-   /** The components. */
-   private List<Component>           components;
-   
    /** The theme file. */
    private String                    themeFile;
    
@@ -60,6 +51,9 @@ public final class MainContext {
    
    /** The base. */
    private Base                      base;
+
+   /** The Settings. */
+   private Settings                  settings;
    
    /** The editor. */
    private Editor                    editor;
@@ -68,7 +62,7 @@ public final class MainContext {
    private PThemePanel               mainpanel;
    
    /** The maintable. */
-   private ThemeTable                 maintable;
+   private Map<String,ThemeTable>    tables;
    
    /** The current mode. */
    private Mode                      currentMode;
@@ -83,7 +77,7 @@ public final class MainContext {
     * Instantiates a new main context.
     */
    private MainContext() {
-      components = new ArrayList<>();
+      tables = new HashMap<>();
    }
 
    /**
@@ -114,6 +108,16 @@ public final class MainContext {
       }
       if (!Files.exists(Paths.get(themeFile))) {
          throw new Exception("Unable to initialize PThemeTools: not theme.txt");
+      }
+      
+      try {
+         Field field = Theme.class.getDeclaredField("theme");
+         field.setAccessible(true);
+         settings = (Settings) field.get(null);
+         Log.info("Settings available!");
+      } catch (NoSuchFieldException|SecurityException|IllegalArgumentException|IllegalAccessException e) {
+         Log.info("Settings not available! :/");
+         throw new Exception("Settings not accessable! :/\n",e);
       }
       
       loadGlobalFont();
@@ -161,42 +165,6 @@ public final class MainContext {
    public void startFileWatcher() {
       fileWatcher = new FileWatcher(themeFile);
       fileWatcher.start();
-   }
-
-   /**
-    * Adds the theme component.
-    *
-    * @param c the component to add
-    */
-   public void addThemeComponent(Component c) {
-      components.add(c);
-   }
-
-   /**
-    * Apply theme.
-    */
-   public void applyTheme() {
-      components.forEach(c -> {
-         if (c instanceof JPanel) {
-            if ("headerPanel".equals(c.getName())) {
-               ((JPanel) c).setBackground(getPropertyColor(ThemeToolsHelper.JPANEL_BGCOLOR_ATTR));
-               ((JPanel) c).setBorder(BorderFactory.createMatteBorder(2, 2, 0, 0, getPropertyColor(ThemeToolsHelper.JPANEL_BORDER_COLOR_ATTR)));
-            } else if ("buttonPanel".equals(c.getName())) {
-               ((JPanel) c).setBackground(getPropertyColor(ThemeToolsHelper.JPANEL_BGCOLOR_ATTR));
-               ((JPanel) c).setBorder(null);
-            } else {
-               c.setBackground(getPropertyColor(ThemeToolsHelper.JPANEL_BGCOLOR_ATTR));
-            }
-         } else if (c instanceof JButton) {
-            c.setBackground(getPropertyColor(ThemeToolsHelper.JBUTTON_BGCOLOR_ATTR));
-            c.setForeground(getPropertyColor(ThemeToolsHelper.JBUTTON_FGCOLOR_ATTR));
-         } else if (c instanceof JLabel) {
-            c.setForeground(getPropertyColor(ThemeToolsHelper.JLABEL_FGCOLOR_ATTR));
-         } else if (c instanceof JScrollPane) {
-            ((JScrollPane) c).setBorder(BorderFactory.createMatteBorder(2, 2, 2, 0, getPropertyColor(ThemeToolsHelper.JSCROLLPANE_BORDER_COLOR_ATTR)));
-            ((PdeScrollBarUI) ((JScrollPane) c).getVerticalScrollBar().getUI()).updateTheme();
-         }
-      });
    }
 
    /**
@@ -254,6 +222,10 @@ public final class MainContext {
       this.editor = base.getActiveEditor();
    }
 
+   public Settings getSettings() {
+      return settings;
+   }
+
    /**
     * Gets the editor.
     *
@@ -277,8 +249,8 @@ public final class MainContext {
     *
     * @return the main table
     */
-   public ThemeTable getMainTable() {
-      return maintable;
+   public ThemeTable getTable(String name) {
+      return tables.get(name);
    }
 
    /**
@@ -286,8 +258,8 @@ public final class MainContext {
     *
     * @param maintable the new main table
     */
-   public void setMainTable(ThemeTable maintable) {
-      this.maintable = maintable;
+   public void addTable(ThemeTable table) {
+      tables.put(table.getName(), table);
    }
 
    /**
@@ -327,16 +299,6 @@ public final class MainContext {
    }
 
    /**
-    * Gets the property color.
-    *
-    * @param p the p
-    * @return the property color
-    */
-   public Color getPropertyColor(String p) {
-      return Color.decode((String) properties.get(p));
-   }
-
-   /**
     * Reload file.
     *
     * @throws Exception the exception
@@ -345,10 +307,11 @@ public final class MainContext {
       properties.loadFile();
       Theme.loadSketchbookFile();
       EventQueue.invokeLater(() -> { 
-         maintable.setEnabled(false);
-         maintable.populateData();
-         maintable.setEnabled(true);
-         applyTheme();
+         for (ThemeTable t : tables.values()) {
+            t.setEnabled(false);
+            t.populateData();
+            t.setEnabled(true);
+         }
          base.updateTheme();
       });
    }
@@ -384,6 +347,8 @@ public final class MainContext {
     * @return true, if successful
     */
    public boolean hasInfo(String v) {
+      if (v==null)
+         return false;
       if (v.contains(".token.")) {
          String id = v.trim().replaceAll("editor\\.token\\.([^\\.]+)\\.style", "$1");      
          if (kwMap.get(id) != null) {

@@ -11,7 +11,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;
@@ -25,6 +24,7 @@ import com.processing.mnse.themetools.common.ThemeToolsHelper;
 import com.processing.mnse.themetools.table.ThemeTable;
 
 import processing.app.laf.PdeScrollBarUI;
+import processing.app.ui.Theme;
 
 /**
  * The Class PThemeInfoDialog.
@@ -80,15 +80,13 @@ public class PThemeInfoDialog extends JDialog {
       headerPanel.setPreferredSize(new Dimension(300, 30));
       headerPanel.setMaximumSize(new Dimension(300, 30));
       headerPanel.setSize(new Dimension(300, 30));
-      headerPanel.setBackground(MainContext.instance().getPropertyColor(ThemeToolsHelper.JPANEL_BGCOLOR_ATTR));
-      headerPanel.setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, MainContext.instance().getPropertyColor(ThemeToolsHelper.JPANEL_BORDER_COLOR_ATTR)));
-      JLabel header = new JLabel("affected by " + lbl.trim().replaceAll("editor\\.token\\.([^\\.]+)\\.style", "$1"));
-      header.setForeground(MainContext.instance().getPropertyColor(ThemeToolsHelper.JLABEL_FGCOLOR_ATTR));
+      headerPanel.setBackground(Theme.getColor(ThemeToolsHelper.JPANEL_BGCOLOR_ATTR));
+      JLabel header = new JLabel(" affected by " + lbl.trim().replaceAll("editor\\.token\\.([^\\.]+)\\.style", "$1"));
+      header.setForeground(Theme.getColor(ThemeToolsHelper.JLABEL_FGCOLOR_ATTR));
       headerPanel.add(header);
       headerPanel.add(Box.createHorizontalGlue());
       JLabel close = new JLabel("close ");
-      //close.setBorder(BorderFactory.createLineBorder(MainContext.instance().getPropertyColor(ThemeToolsHelper.JPANEL_BORDER_COLOR_ATTR)));
-      close.setForeground(MainContext.instance().getPropertyColor(ThemeToolsHelper.JLABEL_FGCOLOR_ATTR));
+      close.setForeground(Theme.getColor(ThemeToolsHelper.JLABEL_FGCOLOR_ATTR));
       close.addMouseListener(new MouseAdapter() {
          @Override
          public void mousePressed(MouseEvent e) {
@@ -100,7 +98,7 @@ public class PThemeInfoDialog extends JDialog {
 
       JTextArea txt = new JTextArea();
       txt.setFont(MainContext.instance().getGlobalFont().deriveFont("bold".equals(table.getModel().getValueAt(row, 2)) ? Font.BOLD : Font.PLAIN,11f));
-      txt.setBackground(MainContext.instance().getPropertyColor(ThemeToolsHelper.EDITOR_BGCOLOR_ATTR));
+      txt.setBackground(Theme.getColor(ThemeToolsHelper.EDITOR_BGCOLOR_ATTR));
       txt.setForeground((Color)table.getModel().getValueAt(row, 1));      
       txt.setEditable(false);
       txt.setText(toolTipText);

@@ -10,8 +10,9 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
 
-import com.processing.mnse.themetools.common.MainContext;
 import com.processing.mnse.themetools.common.ThemeToolsHelper;
+
+import processing.app.ui.Theme;
 
 /**
  * The Class LableCellRenderer.
@@ -49,18 +50,12 @@ public final class LableCellRenderer extends JLabel implements TableCellRenderer
     */
    @Override
    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-      if (value==null) {
-         setBackground(MainContext.instance().getPropertyColor(ThemeToolsHelper.JSCROLLPANE_BORDER_COLOR_ATTR));
-         table.setRowHeight(row, 4);
-         setText("");
-         return this;
-      }      
       String lbl = (String) value;
       setText(lbl);
-      Color color = MainContext.instance().getPropertyColor(ThemeToolsHelper.LABEL_CELL_BGCOLOR_ATTR);      
+      Color color = (row % 2 == 0) ? Theme.getColor(ThemeToolsHelper.TABLE_CELL_EVEN) : Theme.getColor(ThemeToolsHelper.TABLE_CELL_ODD);      
       setBackground(color);
       setForeground(ThemeToolsHelper.getContrastColor(color));
-      setBorder(isSelected ? BorderFactory.createMatteBorder(2, 0, 2, 0, MainContext.instance().getPropertyColor(ThemeToolsHelper.TABLE_ROW_SELECTED_COLOR_ATTR)) : BorderFactory.createEmptyBorder());
+      setBorder(isSelected ? BorderFactory.createMatteBorder(2, 0, 2, 0, Theme.getColor(ThemeToolsHelper.TABLE_ROW_SELECTED_COLOR_ATTR)) : BorderFactory.createEmptyBorder());
       return this;
    }
 }

@@ -1,6 +1,7 @@
 package com.processing.mnse.themetools.common;
 
 import java.awt.Color;
+import java.util.LinkedHashMap;
 
 /**
  * The Class ThemeToolsHelper.
@@ -13,8 +14,8 @@ public final class ThemeToolsHelper {
    /** The Constant TABLE_ROW_SELECTED_COLOR_ATTR. */
    public static final String TABLE_ROW_SELECTED_COLOR_ATTR = "editor.scrollbar.thumb.enabled.color";
    
-   /** The Constant JSCROLLPANE_BORDER_COLOR_ATTR. */
-   public static final String JSCROLLPANE_BORDER_COLOR_ATTR = "editor.scrollbar.thumb.enabled.color";
+//   /** The Constant JSCROLLPANE_BORDER_COLOR_ATTR. */
+//   public static final String JSCROLLPANE_BORDER_COLOR_ATTR = "editor.scrollbar.thumb.enabled.color";
    
    /** The Constant JPANEL_BORDER_COLOR_ATTR. */
    public static final String JPANEL_BORDER_COLOR_ATTR      = "editor.scrollbar.thumb.enabled.color";
@@ -22,27 +23,33 @@ public final class ThemeToolsHelper {
    /** The Constant JLABEL_FGCOLOR_ATTR. */
    public static final String JLABEL_FGCOLOR_ATTR           = "manager.tab.text.selected.color";
    
-   /** The Constant JBUTTON_FGCOLOR_ATTR. */
-   public static final String JBUTTON_FGCOLOR_ATTR          = "manager.tab.text.selected.color";
-   
-   /** The Constant JBUTTON_BGCOLOR_ATTR. */
-   public static final String JBUTTON_BGCOLOR_ATTR          = "manager.tab.selected.color";
-   
+//   /** The Constant JBUTTON_FGCOLOR_ATTR. */
+//   public static final String JBUTTON_FGCOLOR_ATTR          = "manager.tab.text.selected.color";
+//   
+//   /** The Constant JBUTTON_BGCOLOR_ATTR. */
+//   public static final String JBUTTON_BGCOLOR_ATTR          = "manager.tab.selected.color";
+//   
    /** The Constant JPANEL_BGCOLOR_ATTR. */
    public static final String JPANEL_BGCOLOR_ATTR           = "editor.gradient.bottom";
    
    /** The Constant PDE_SCROLLBAR_UI_ATTR. */
    public static final String PDE_SCROLLBAR_UI_ATTR         = "editor.scrollbar";
-   
+//   
+//   /** The Constant LABEL_CELL_BGCOLOR_ATTR. */
+//   public static final String LABEL_CELL_BGCOLOR_ATTR       = "editor.gradient.top";
+
    /** The Constant LABEL_CELL_BGCOLOR_ATTR. */
-   public static final String LABEL_CELL_BGCOLOR_ATTR       = "editor.gradient.top";
+   public static final String TABLE_CELL_ODD                = "header.tab.unselected.color";
+
+   /** The Constant LABEL_CELL_BGCOLOR_ATTR. */
+   public static final String TABLE_CELL_EVEN               = "header.tab.selected.color";
    
    /** The Constant EDITOR_BGCOLOR_ATTR. */
    public static final String EDITOR_BGCOLOR_ATTR           = "editor.bgcolor";
-   
-   /** The Constant EDITOR_FGCOLOR_ATTR. */
-   public static final String EDITOR_FGCOLOR_ATTR           = "editor.fgcolor";
-   
+//   
+//   /** The Constant EDITOR_FGCOLOR_ATTR. */
+//   public static final String EDITOR_FGCOLOR_ATTR           = "editor.fgcolor";
+//   
    /** The Constant LOG_MSG_FORMAT. */
    public static final String LOG_MSG_FORMAT                = "%s [%s] %s: %s%n";
    
@@ -50,21 +57,23 @@ public final class ThemeToolsHelper {
    public static final String DATE_TIME_FORMAT              = "yyyy/MM/dd HH:mm:ss";
    
    /** The Constant VALUE_NOT_AVAILABLE. */
-   public static final String VALUE_NOT_AVAILABLE           = "N/A";
-
-   /** The Constant visibleItems. */
-   public static final String[] visibleItems = {
-         ".*\\.token\\..*",
-         "^editor.bgcolor$",
-         "^editor.fgcolor$",
-         "^editor.warning.underline.color$",
-         "^editor.error.underline.color$",
-         "^editor.selection.color$",
-         "^editor.line.highlight.color$",
-         ".*color$",
-         ".*style$"
-   };
-
+   public static final String VALUE_NOT_AVAILABLE           = "";
+  
+   /** The visible Items groups. */
+   @SuppressWarnings("serial")
+   public static final LinkedHashMap<String, String[]> GROUP_ITEMS = new LinkedHashMap<>() {{
+      put("Code Tokens", new String[]{"^editor\\.token\\..*style$"});
+      put("Editor", new String[]{"^editor\\.(?!token).*color$"});
+      put("Manager", new String[]{"^manager\\..*(color|style)$"});      
+      put("Console", new String[]{"^console\\..*(color|style)$"});
+      put("Errors", new String[]{"^errors\\..*(color|style)$"});
+      put("Header", new String[]{"^header\\..*(color|style)$"});
+      put("Footer", new String[]{"^footer\\..*(color|style)$"});     
+      put("Mode", new String[]{"^mode\\..*(color|style)$"});
+      put("Status", new String[]{"^status\\..*(color|style)$"});
+      put("Other", new String[]{"^(laf|run|toolbar|label)\\..*(color|style)$"});      
+   }};
+   
    /**
     * Gets the contrast color.
     *

@@ -13,8 +13,6 @@ import javax.swing.JDialog;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-import com.processing.mnse.themetools.common.MainContext;
-
 /**
  * The Class ColorCellEditor.
  * cell editor for Color selector
@@ -37,7 +35,7 @@ public final class ColorCellEditor extends AbstractCellEditor implements TableCe
    private JDialog       dialog;
    
    /** The parent table. */
-   private JTable        parentTable;
+   private ThemeTable parentTable;
 
    /** The Constant EDIT. */
    private static final String EDIT = "edit";
@@ -47,7 +45,7 @@ public final class ColorCellEditor extends AbstractCellEditor implements TableCe
     *
     * @param parent the parent
     */
-   public ColorCellEditor(JTable parent) {
+   public ColorCellEditor(ThemeTable parent) {
       parentTable = parent;
       button = new JButton();
       button.setActionCommand(EDIT);
@@ -73,8 +71,8 @@ public final class ColorCellEditor extends AbstractCellEditor implements TableCe
          Color selectedColor = colorChooser.getColor();
          if (!selectedColor.equals(currentColor)) {
             currentColor = selectedColor;
-            final int row = parentTable.getEditingRow();
-            EventQueue.invokeLater(() -> MainContext.instance().getMainTable().updatePropertyFromTable(row));
+            final int row = parentTable.getEditingRow();            
+            EventQueue.invokeLater(() -> parentTable.updatePropertyFromTable(row));
          }
       }
    }

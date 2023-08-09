@@ -1,13 +1,6 @@
 package com.processing.mnse.themetools.common;
 
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
@@ -33,9 +26,6 @@ public final class OrderedProperties extends Properties {
    /** The filename. */
    private String                      filename;
    
-   /** The backupfilename. */
-   private String                      backupfilename;
-
    /**
     * Instantiates a new ordered properties.
     *
@@ -46,10 +36,6 @@ public final class OrderedProperties extends Properties {
       super();
       this.filename = filename;
       loadFile();
-      LocalDateTime now = LocalDateTime.now();
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-      backupfilename = filename.replaceAll("theme.txt$", now.format(formatter) + "_" + "theme.txt");
-      backupFile();
    }
 
    /**
@@ -106,77 +92,21 @@ public final class OrderedProperties extends Properties {
    }
 
    /**
-    * Update property entry by key/value.
-    *
-    * @param key the key
-    * @param v1 the first value
-    * @param v2 the second value
-    */
-   public void updateEntry(String key, String v1, String v2) {
-      if (ThemeToolsHelper.VALUE_NOT_AVAILABLE.equals(v2)) {
-         Log.debug("update property: " + key + "=" + v1);
-         setProperty(key, v1);
-      } else {
-         Log.debug("update property: " + key + "=" + v1 + "," + v2);
-         setProperty(key, v1 + "," + v2);
-      }
-   }
-
-   /**
     * Update entry.
     *
     * @param tableEntry the tableEntry by tableEntry
     */
-   public void updateEntry(ThemeTableEntry tableEntry) {
-      setProperty(tableEntry.getLabel(), tableEntry.createPropertyValue());
+   public void updateEntry(ThemeTableEntry tableEntry) {      
+      MainContext.instance().getSettings().set(tableEntry.getLabel(), tableEntry.createPropertyValue());
+      MainContext.instance().getBase().updateTheme();
    }
 
-   /**
-    * Update theme file.
-    */
-   public void updateFile() {
-      try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filename))) {
-         for (Object key : orderedKeys()) {
-            String k = (String) key;
-            String v = getProperty(k).trim();
-            writer.write(k + "=" + v);
-            writer.newLine();
-         }
-      } catch (IOException e) {
-         Log.warning("Failed to apply theme.txt to " + filename);
-      }
-   }
-
-   /**
-    * Revert theme file from backup.
-    */
-   public void revertFile() {
-      try {
-         Files.copy(Paths.get(backupfilename), Paths.get(filename), StandardCopyOption.REPLACE_EXISTING);
-         try (FileInputStream fis = new FileInputStream(this.filename)) {
-            load(fis);
-         }
-         Log.debug("revert theme.txt from backup: " + backupfilename);
-      } catch (IOException e) {
-         Log.warning("can't revert file: " + backupfilename + "\n" + e.getMessage());
-      }
-   }
-
-   /**
-    * Backup theme file.
-    */
-   public void backupFile() {
-      Log.debug("creating backup of theme.txt to " + backupfilename);
-
-      try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(backupfilename))) {
-         for (Object key : orderedKeys()) {
-            String k = (String) key;
-            String v = getProperty(k);
-            writer.write(k + "=" + v);
-            writer.newLine();
-         }
-      } catch (IOException e) {
-         Log.warning("Failed to backup theme.txt to " + backupfilename);
-      }
+   public void revert() {
+      for (Object key : orderedKeys()) {
+         String k = (String) key;
+         String v = getProperty(k);
+         MainContext.instance().getSettings().set(k, v);
+      }            
+      MainContext.instance().getBase().updateTheme();
    }
 }

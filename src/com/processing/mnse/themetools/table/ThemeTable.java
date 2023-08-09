@@ -2,13 +2,13 @@ package com.processing.mnse.themetools.table;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
@@ -16,8 +16,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import com.processing.mnse.themetools.common.MainContext;
-import com.processing.mnse.themetools.common.ThemeToolsHelper;
 import com.processing.mnse.themetools.gui.PThemeInfoDialog;
+
+import processing.app.ui.Theme;
 
 /**
  * The Class ThemeTable.
@@ -30,21 +31,23 @@ public final class ThemeTable extends JTable {
    
    /** The ctx. */
    private MainContext         ctx;
+   private String[]            contentRegEx;
 
    /**
     * Instantiates a new theme table.
     *
     * @param ctx the ctx
     */
-   public ThemeTable(MainContext ctx) {
+   public ThemeTable(MainContext ctx, String name, String[] contentRegEx) {
       super();
       this.ctx = ctx;
+      setName(name+"Table");
+      this.contentRegEx = contentRegEx;
 
       setModel(new ThemeTableDataModel(new String[] { "Label", "Color", "Style"
       }));
       setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-      
       Font font = ctx.getGlobalFont().deriveFont(11f);
       setFont(font);
       setRowHeight(ctx.getFontHeight(this, font));
@@ -68,9 +71,8 @@ public final class ThemeTable extends JTable {
       setShowHorizontalLines(false);
       setShowVerticalLines(false);
       setTableHeader(null);
-      setBorder(null);
-      ctx.setMainTable(this);
-      ctx.addThemeComponent(this);
+      setBorder(BorderFactory.createEmptyBorder());
+      ctx.addTable(this);
       populateData();
    }
 
@@ -92,32 +94,28 @@ public final class ThemeTable extends JTable {
       return lbl;
    }
 
+   @Override
+   public void paint(Graphics g) {
+      setBackground(Theme.getColor("editor.gradient.top"));
+      super.paint(g);
+   } 
+   
    /**
-    * Populate data.
+    * Populate corresponding data.
     */
    public void populateData() {
       DefaultTableModel model = (DefaultTableModel) getModel();
       model.setRowCount(0);
-      List<ThemeTableEntry> top = new ArrayList<>();
-      List<ThemeTableEntry> bottom = new ArrayList<>();
       StreamSupport.stream(MainContext.instance().getProperties().orderedKeys().spliterator(), false).map(key -> (String) key)
-            .filter(k -> List.of(ThemeToolsHelper.visibleItems).stream().anyMatch(pattern -> k.matches(pattern))).forEachOrdered(k -> {
+            .filter(k -> List.of(contentRegEx).stream().anyMatch(pattern -> k.matches(pattern))).forEachOrdered(k -> {
                ThemeTableEntry entry = ThemeTableEntry.fromString(k, MainContext.instance().getProperties().getProperty(k));
-               if (entry.getLabel().contains(".token."))
-                  top.add(entry);
-               else
-                  bottom.add(entry);
-            });
-      top.add(ThemeTableEntry.emptyEntry());
-      Stream.concat(top.stream(), bottom.stream()).forEachOrdered(e -> {
-         model.addRow(e.toTableElement());
-      });
-
+               model.addRow(entry.toTableElement());
+            });      
       adjustColumnWidths(0);
       adjustColumnWidths(1);
       adjustColumnWidths(2);
    }
-
+   
    /**
     * Update property from table.
     *
@@ -143,7 +141,6 @@ public final class ThemeTable extends JTable {
          Component c = prepareRenderer(cellRenderer, row, column);
          int width = c.getPreferredSize().width + getIntercellSpacing().width;
          preferredWidth = Math.max(preferredWidth, width);
-
          if (preferredWidth >= maxWidth) {
             preferredWidth = maxWidth;
             break;

@@ -9,8 +9,9 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableCellRenderer;
 
-import com.processing.mnse.themetools.common.MainContext;
 import com.processing.mnse.themetools.common.ThemeToolsHelper;
+
+import processing.app.ui.Theme;
 
 /**
  * The Class ColorCellRenderer.
@@ -44,17 +45,12 @@ public final class ColorCellRenderer extends JLabel implements TableCellRenderer
     * @return the table cell renderer component
     */
    @Override
-   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-      if (value==null) {         
-         setBackground(MainContext.instance().getPropertyColor(ThemeToolsHelper.JSCROLLPANE_BORDER_COLOR_ATTR));
-         setText("");
-         return this;
-      }      
+   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) { 
       Color color = (Color) value;
       setText(ThemeToolsHelper.toHexColorString(color));
       setBackground(color);  
       setForeground(ThemeToolsHelper.getContrastColor(color));      
-      setBorder(isSelected ? BorderFactory.createMatteBorder(2, 0, 2, 0,  MainContext.instance().getPropertyColor(ThemeToolsHelper.TABLE_ROW_SELECTED_COLOR_ATTR)) : BorderFactory.createEmptyBorder());
+      setBorder(isSelected ? BorderFactory.createMatteBorder(2, 0, 2, 0,  Theme.getColor(ThemeToolsHelper.TABLE_ROW_SELECTED_COLOR_ATTR)) : BorderFactory.createEmptyBorder());
       return this;
    }
 }
