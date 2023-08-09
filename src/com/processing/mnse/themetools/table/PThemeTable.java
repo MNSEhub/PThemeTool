@@ -15,55 +15,55 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import com.processing.mnse.themetools.common.MainContext;
+import com.processing.mnse.themetools.common.PThemeMainContext;
 import com.processing.mnse.themetools.gui.PThemeInfoDialog;
 
 import processing.app.ui.Theme;
 
 /**
- * The Class ThemeTable.
+ * The Class PThemeTable.
  * the main table to handle theme properties
  * 
- * @author mnse 
+ * @author mnse
  */
 @SuppressWarnings("serial")
-public final class ThemeTable extends JTable {
-   
+public final class PThemeTable extends JTable {
+
    /** The ctx. */
-   private MainContext         ctx;
-   private String[]            contentRegEx;
+   private PThemeMainContext ctx;
+   private String[]          contentRegEx;
 
    /**
     * Instantiates a new theme table.
     *
     * @param ctx the ctx
     */
-   public ThemeTable(MainContext ctx, String name, String[] contentRegEx) {
+   public PThemeTable(PThemeMainContext ctx, String name, String[] contentRegEx) {
       super();
       this.ctx = ctx;
-      setName(name+"Table");
+      setName(name + "Table");
       this.contentRegEx = contentRegEx;
 
-      setModel(new ThemeTableDataModel(new String[] { "Label", "Color", "Style"
+      setModel(new PThemeTableDataModel(new String[] { "Label", "Color", "Style"
       }));
       setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
       Font font = ctx.getGlobalFont().deriveFont(11f);
       setFont(font);
       setRowHeight(ctx.getFontHeight(this, font));
-      
-      getColumnModel().getColumn(0).setCellRenderer(new LableCellRenderer(this));
 
-      getColumnModel().getColumn(1).setCellEditor(new ColorCellEditor(this));
-      getColumnModel().getColumn(1).setCellRenderer(new ColorCellRenderer(this));
+      getColumnModel().getColumn(0).setCellRenderer(new PThemeLabelCellRenderer(this));
 
-      getColumnModel().getColumn(2).setCellEditor(new StyleCellEditor(this));
-      getColumnModel().getColumn(2).setCellRenderer(new StyleCellRenderer(this));
+      getColumnModel().getColumn(1).setCellEditor(new PThemeColorCellEditor(this));
+      getColumnModel().getColumn(1).setCellRenderer(new PThemeColorCellRenderer(this));
+
+      getColumnModel().getColumn(2).setCellEditor(new PThemeStyleCellEditor(this));
+      getColumnModel().getColumn(2).setCellRenderer(new PThemeStyleCellRenderer(this));
 
       addMouseListener(new MouseAdapter() {
          @Override
          public void mouseClicked(MouseEvent e) {
-            new PThemeInfoDialog((ThemeTable) e.getSource(), e);
+            new PThemeInfoDialog((PThemeTable) e.getSource(), e);
          }
       });
 
@@ -88,7 +88,7 @@ public final class ThemeTable extends JTable {
       int rowIndex = rowAtPoint(p);
       int colIndex = columnAtPoint(p);
       String lbl = (String) getModel().getValueAt(rowIndex, 0);
-      if (colIndex == 0 && MainContext.instance().hasInfo(lbl)) {
+      if (colIndex == 0 && PThemeMainContext.instance().hasInfo(lbl)) {
          lbl += "\n" + "click for more info";
       }
       return lbl;
@@ -98,31 +98,31 @@ public final class ThemeTable extends JTable {
    public void paint(Graphics g) {
       setBackground(Theme.getColor("editor.gradient.top"));
       super.paint(g);
-   } 
-   
+   }
+
    /**
     * Populate corresponding data.
     */
    public void populateData() {
       DefaultTableModel model = (DefaultTableModel) getModel();
       model.setRowCount(0);
-      StreamSupport.stream(MainContext.instance().getProperties().orderedKeys().spliterator(), false).map(key -> (String) key)
+      StreamSupport.stream(PThemeMainContext.instance().getProperties().orderedKeys().spliterator(), false).map(key -> (String) key)
             .filter(k -> List.of(contentRegEx).stream().anyMatch(pattern -> k.matches(pattern))).forEachOrdered(k -> {
-               ThemeTableEntry entry = ThemeTableEntry.fromString(k, MainContext.instance().getProperties().getProperty(k));
+               PThemeTableEntry entry = PThemeTableEntry.fromString(k, PThemeMainContext.instance().getProperties().getProperty(k));
                model.addRow(entry.toTableElement());
-            });      
+            });
       adjustColumnWidths(0);
       adjustColumnWidths(1);
       adjustColumnWidths(2);
    }
-   
+
    /**
     * Update property from table.
     *
     * @param row the row
     */
    public void updatePropertyFromTable(int row) {
-      ctx.getProperties().updateEntry(ThemeTableEntry.fromTable((DefaultTableModel) getModel(), row));
+      ctx.getProperties().updateEntry(PThemeTableEntry.fromTable((DefaultTableModel) getModel(), row));
    }
 
    /**

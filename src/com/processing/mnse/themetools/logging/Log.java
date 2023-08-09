@@ -8,16 +8,16 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import com.processing.mnse.themetools.common.ThemeToolsHelper;
+import com.processing.mnse.themetools.common.PThemeToolsHelper;
 
 /**
  * The Class Log.
  * logging class
  * 
- * @author mnse 
+ * @author mnse
  */
 public final class Log {
-   
+
    /** The Constant logger. */
    private static final Logger logger = Logger.getLogger("##project.name##");
 
@@ -68,9 +68,9 @@ public final class Log {
     * The Class CustomFormatter.
     */
    static class CustomFormatter extends Formatter {
-      
+
       /** The Constant DateTimeFormat. */
-      private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern(ThemeToolsHelper.DATE_TIME_FORMAT);
+      private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern(PThemeToolsHelper.DATE_TIME_FORMAT);
 
       /**
        * Format.
@@ -80,7 +80,7 @@ public final class Log {
        */
       @Override
       public String format(LogRecord record) {
-         return String.format(ThemeToolsHelper.LOG_MSG_FORMAT, dtf.format(LocalDateTime.now()), record.getLevel(), record.getLoggerName(), record.getMessage());
+         return String.format(PThemeToolsHelper.LOG_MSG_FORMAT, dtf.format(LocalDateTime.now()), record.getLevel(), record.getLoggerName(), record.getMessage());
       }
    }
 }

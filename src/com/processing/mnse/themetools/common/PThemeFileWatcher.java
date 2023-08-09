@@ -16,39 +16,39 @@ import java.util.concurrent.TimeUnit;
 import com.processing.mnse.themetools.logging.Log;
 
 /**
- * The Class FileWatcher.
+ * The Class PThemeFileWatcher.
  * 
  * @author mnse
  */
-public final class FileWatcher implements Runnable {
-   
+public final class PThemeFileWatcher implements Runnable {
+
    /** The path. */
-   private final Path   path;
-   
+   private final Path path;
+
    /** The tracked filename. */
-   private final Path   trackedFilename;
-   
+   private final Path trackedFilename;
+
    /** The running. */
-   private boolean      running   = false;
-   
+   private boolean running = false;
+
    /** The paused. */
-   private boolean      paused    = false;
-   
+   private boolean paused = false;
+
    /** The pause lock. */
    private final Object pauseLock = new Object();
 
    /** The scheduler. */
    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-   
+
    /** The future. */
-   private ScheduledFuture<?>             future    = null;
+   private ScheduledFuture<?> future = null;
 
    /**
     * Instantiates a new file watcher.
     *
     * @param fname the filename being tracked for changes
     */
-   public FileWatcher(String fname) {
+   public PThemeFileWatcher(String fname) {
       trackedFilename = Paths.get(fname).getFileName();
       path = Paths.get(fname).getParent();
       Log.info("tracking: " + trackedFilename + " in path " + path);
@@ -108,7 +108,7 @@ public final class FileWatcher implements Runnable {
    private void reloadFile() {
       try {
          Log.debug("Reloading file");
-         MainContext.instance().reloadFile();
+         PThemeMainContext.instance().reloadFile();
       } catch (Exception e) {
          Log.error("Issues loading file !?");
       }

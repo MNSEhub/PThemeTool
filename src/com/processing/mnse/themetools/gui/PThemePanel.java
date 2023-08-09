@@ -18,9 +18,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.plaf.basic.BasicPanelUI;
 
-import com.processing.mnse.themetools.common.MainContext;
-import com.processing.mnse.themetools.common.ThemeToolsHelper;
-import com.processing.mnse.themetools.table.ThemeTable;
+import com.processing.mnse.themetools.common.PThemeMainContext;
+import com.processing.mnse.themetools.common.PThemeToolsHelper;
+import com.processing.mnse.themetools.table.PThemeTable;
 
 import processing.app.laf.PdeScrollBarUI;
 import processing.app.ui.Theme;
@@ -35,7 +35,7 @@ import processing.app.ui.Theme;
 public final class PThemePanel extends JPanel {
 
    /** The main context object. */
-   private MainContext ctx;
+   private PThemeMainContext ctx;
 
    /**
     * Instantiates a new PThemePanel object.
@@ -43,7 +43,7 @@ public final class PThemePanel extends JPanel {
     * @param ctx the main context
     * @throws Exception the exception
     */
-   public PThemePanel(MainContext ctx) throws Exception {
+   public PThemePanel(PThemeMainContext ctx) throws Exception {
       this.ctx = ctx;
       this.setName("mainPanel");
       this.setUI(new BasicPanelUI());
@@ -56,13 +56,13 @@ public final class PThemePanel extends JPanel {
 
    @Override
    protected void paintComponent(Graphics g) {
-      setBackground(Theme.getColor(ThemeToolsHelper.JPANEL_BGCOLOR_ATTR));
-      super.paintComponent(g);  
+      setBackground(Theme.getColor(PThemeToolsHelper.JPANEL_BGCOLOR_ATTR));
+      super.paintComponent(g);
    }
 
    @Override
    protected void paintBorder(Graphics g) {
-      setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Theme.getColor(ThemeToolsHelper.JPANEL_BORDER_COLOR_ATTR)));
+      setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Theme.getColor(PThemeToolsHelper.JPANEL_BORDER_COLOR_ATTR)));
       super.paintBorder(g);
    }
 
@@ -75,17 +75,17 @@ public final class PThemePanel extends JPanel {
       JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 2)) {
          @Override
          protected void paintComponent(Graphics g) {
-            Color color = Theme.getColor("editor.gradient.top"); 
+            Color color = Theme.getColor("editor.gradient.top");
             setBackground(color);
             super.paintComponent(g);
             String watermark = "mnse  ";
-            Font watermarkFont = g.getFont().deriveFont(Font.BOLD,14f);
+            Font watermarkFont = g.getFont().deriveFont(Font.BOLD, 14f);
             g.setFont(watermarkFont);
             FontMetrics metrics = g.getFontMetrics(watermarkFont);
             int x = (getWidth() - metrics.stringWidth(watermark));
             int y = (getHeight() - metrics.getHeight()) / 2 + metrics.getAscent();
-            g.setColor(ThemeToolsHelper.getLuminance(color) > 0.5 ? color.darker() : color.brighter());            
-            g.drawString(watermark, x, y);                         
+            g.setColor(PThemeToolsHelper.getLuminance(color) > 0.5 ? color.darker() : color.brighter());
+            g.drawString(watermark, x, y);
          }
       };
       headerPanel.setName("headerPanel");
@@ -94,14 +94,15 @@ public final class PThemePanel extends JPanel {
          @Override
          protected void paintComponent(Graphics g) {
             setBackground(Theme.getColor("editor.gradient.top"));
-            setForeground(ThemeToolsHelper.getContrastColor(getBackground()));
+            setForeground(PThemeToolsHelper.getContrastColor(getBackground()));
             super.paintComponent(g);
          }
       };
-      header.setSize(new Dimension(this.getWidth(), 40));      
+      header.setSize(new Dimension(this.getWidth(), 40));
       headerPanel.add(header);
       return headerPanel;
    }
+
    /**
     * Creates the buttons.
     *
@@ -179,24 +180,24 @@ public final class PThemePanel extends JPanel {
       JPanel tablePanel = new JPanel(new BorderLayout()) {
          @Override
          protected void paintBorder(Graphics g) {
-            setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, Theme.getColor(ThemeToolsHelper.JPANEL_BORDER_COLOR_ATTR)));
+            setBorder(BorderFactory.createMatteBorder(2, 0, 2, 0, Theme.getColor(PThemeToolsHelper.JPANEL_BORDER_COLOR_ATTR)));
             super.paintBorder(g);
          }
       };
       PThemeTabbedPane tabbedPane = new PThemeTabbedPane();
       tabbedPane.setBorder(BorderFactory.createEmptyBorder());
 
-      ThemeToolsHelper.GROUP_ITEMS.forEach((k, v) -> {
-         JScrollPane scroll = new JScrollPane(new ThemeTable(ctx, k, v)) {
+      PThemeToolsHelper.GROUP_ITEMS.forEach((k, v) -> {
+         JScrollPane scroll = new JScrollPane(new PThemeTable(ctx, k, v)) {
             @Override
             public void paint(Graphics g) {
-               setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Theme.getColor(ThemeToolsHelper.JPANEL_BORDER_COLOR_ATTR)));
+               setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Theme.getColor(PThemeToolsHelper.JPANEL_BORDER_COLOR_ATTR)));
                if (getVerticalScrollBar().getUI() instanceof PdeScrollBarUI)
                   ((PdeScrollBarUI) getVerticalScrollBar().getUI()).updateTheme();
                super.paint(g);
             }
          };
-         scroll.getVerticalScrollBar().setUI(new PdeScrollBarUI(ThemeToolsHelper.PDE_SCROLLBAR_UI_ATTR));
+         scroll.getVerticalScrollBar().setUI(new PdeScrollBarUI(PThemeToolsHelper.PDE_SCROLLBAR_UI_ATTR));
          tabbedPane.addTab(k, scroll);
       });
       tablePanel.add(tabbedPane, BorderLayout.CENTER);
@@ -209,6 +210,6 @@ public final class PThemePanel extends JPanel {
    public void dispose() {
       getParent().remove(this);
       ctx.getEditor().pack();
-      MainContext.destroy();
+      PThemeMainContext.destroy();
    }
 }

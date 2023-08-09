@@ -7,32 +7,32 @@ import java.util.LinkedHashSet;
 import java.util.Properties;
 
 import com.processing.mnse.themetools.logging.Log;
-import com.processing.mnse.themetools.table.ThemeTableEntry;
+import com.processing.mnse.themetools.table.PThemeTableEntry;
 
 /**
- * The Class OrderedProperties.
+ * The Class PThemeProperties.
  * keeps and handle the theme properties
  * 
- * @author mnse 
+ * @author mnse
  */
-public final class OrderedProperties extends Properties {
-   
+public final class PThemeProperties extends Properties {
+
    /** The Constant serialVersionUID. */
-   private static final long           serialVersionUID = 6143210832128003462L;
-   
+   private static final long serialVersionUID = 6143210832128003462L;
+
    /** The keys. */
-   private final LinkedHashSet<Object> keys             = new LinkedHashSet<>();
-   
+   private final LinkedHashSet<Object> keys = new LinkedHashSet<>();
+
    /** The filename. */
-   private String                      filename;
-   
+   private String filename;
+
    /**
     * Instantiates a new ordered properties.
     *
     * @param filename the filename
     * @throws Exception the exception
     */
-   public OrderedProperties(String filename) throws Exception {
+   public PThemeProperties(String filename) throws Exception {
       super();
       this.filename = filename;
       loadFile();
@@ -59,7 +59,7 @@ public final class OrderedProperties extends Properties {
    /**
     * Put.
     *
-    * @param key the key
+    * @param key   the key
     * @param value the value
     * @return the object
     */
@@ -96,17 +96,17 @@ public final class OrderedProperties extends Properties {
     *
     * @param tableEntry the tableEntry by tableEntry
     */
-   public void updateEntry(ThemeTableEntry tableEntry) {      
-      MainContext.instance().getSettings().set(tableEntry.getLabel(), tableEntry.createPropertyValue());
-      MainContext.instance().getBase().updateTheme();
+   public void updateEntry(PThemeTableEntry tableEntry) {
+      PThemeMainContext.instance().getSettings().set(tableEntry.getLabel(), tableEntry.createPropertyValue());
+      PThemeMainContext.instance().getBase().updateTheme();
    }
 
    public void revert() {
       for (Object key : orderedKeys()) {
          String k = (String) key;
          String v = getProperty(k);
-         MainContext.instance().getSettings().set(k, v);
-      }            
-      MainContext.instance().getBase().updateTheme();
+         PThemeMainContext.instance().getSettings().set(k, v);
+      }
+      PThemeMainContext.instance().getBase().updateTheme();
    }
 }

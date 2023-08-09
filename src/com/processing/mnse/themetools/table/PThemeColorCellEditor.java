@@ -14,28 +14,28 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
 /**
- * The Class ColorCellEditor.
+ * The Class PThemeColorCellEditor.
  * cell editor for Color selector
  * 
- * @author mnse 
+ * @author mnse
  */
 @SuppressWarnings("serial")
-public final class ColorCellEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
-   
+public final class PThemeColorCellEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
+
    /** The current color. */
-   private Color         currentColor;
-   
+   private Color currentColor;
+
    /** The button. */
-   private JButton       button;
-   
+   private JButton button;
+
    /** The color chooser. */
    private JColorChooser colorChooser;
-   
+
    /** The dialog. */
-   private JDialog       dialog;
-   
+   private JDialog dialog;
+
    /** The parent table. */
-   private ThemeTable parentTable;
+   private PThemeTable parentTable;
 
    /** The Constant EDIT. */
    private static final String EDIT = "edit";
@@ -45,7 +45,7 @@ public final class ColorCellEditor extends AbstractCellEditor implements TableCe
     *
     * @param parent the parent
     */
-   public ColorCellEditor(ThemeTable parent) {
+   public PThemeColorCellEditor(PThemeTable parent) {
       parentTable = parent;
       button = new JButton();
       button.setActionCommand(EDIT);
@@ -71,7 +71,7 @@ public final class ColorCellEditor extends AbstractCellEditor implements TableCe
          Color selectedColor = colorChooser.getColor();
          if (!selectedColor.equals(currentColor)) {
             currentColor = selectedColor;
-            final int row = parentTable.getEditingRow();            
+            final int row = parentTable.getEditingRow();
             EventQueue.invokeLater(() -> parentTable.updatePropertyFromTable(row));
          }
       }
@@ -87,15 +87,14 @@ public final class ColorCellEditor extends AbstractCellEditor implements TableCe
       return currentColor;
    }
 
-
    /**
     * Gets the table cell editor component.
     *
-    * @param table the table
-    * @param value the value
+    * @param table      the table
+    * @param value      the value
     * @param isSelected the is selected
-    * @param row the row
-    * @param column the column
+    * @param row        the row
+    * @param column     the column
     * @return the table cell editor component
     */
    @Override

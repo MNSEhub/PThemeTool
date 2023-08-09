@@ -8,7 +8,7 @@ import java.awt.Rectangle;
 
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
-import com.processing.mnse.themetools.common.MainContext;
+import com.processing.mnse.themetools.common.PThemeMainContext;
 
 import processing.app.ui.Theme;
 
@@ -50,7 +50,7 @@ public class PThemeTabbedPaneCustomUI extends BasicTabbedPaneUI {
 
    @Override
    protected void paintText(Graphics g, int tabPlacement, Font font, FontMetrics metrics, int tabIndex, String title, Rectangle textRect, boolean isSelected) {
-      g.setFont(MainContext.instance().getGlobalFont().deriveFont(24));
+      g.setFont(PThemeMainContext.instance().getGlobalFont().deriveFont(24));
       if (isSelected) {
          parent.setForegroundAt(tabIndex, Theme.getColor("header.text.selected.color"));
       } else {

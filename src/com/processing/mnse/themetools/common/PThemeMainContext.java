@@ -20,7 +20,7 @@ import java.util.Map;
 
 import com.processing.mnse.themetools.gui.PThemePanel;
 import com.processing.mnse.themetools.logging.Log;
-import com.processing.mnse.themetools.table.ThemeTable;
+import com.processing.mnse.themetools.table.PThemeTable;
 
 import processing.app.Base;
 import processing.app.Mode;
@@ -30,53 +30,53 @@ import processing.app.ui.Editor;
 import processing.app.ui.Theme;
 
 /**
- * The MainContext class.
+ * The PThemeMainContext class.
  * context holds main objects and grants access to it.
  * 
- * @author mnse          
+ * @author mnse
  */
-public final class MainContext {
-   
+public final class PThemeMainContext {
+
    /** The context instance. */
-   private static MainContext        context;
-   
+   private static PThemeMainContext context;
+
    /** The theme file. */
-   private String                    themeFile;
-   
+   private String themeFile;
+
    /** The file watcher. */
-   private FileWatcher               fileWatcher;
-   
+   private PThemeFileWatcher fileWatcher;
+
    /** The properties. */
-   private OrderedProperties         properties;
-   
+   private PThemeProperties properties;
+
    /** The base. */
-   private Base                      base;
+   private Base base;
 
    /** The Settings. */
-   private Settings                  settings;
-   
+   private Settings settings;
+
    /** The editor. */
-   private Editor                    editor;
-   
+   private Editor editor;
+
    /** The mainpanel. */
-   private PThemePanel               mainpanel;
-   
-   /** The maintable. */
-   private Map<String,ThemeTable>    tables;
-   
+   private PThemePanel mainpanel;
+
+   /** The tables. */
+   private Map<String, PThemeTable> tables;
+
    /** The current mode. */
-   private Mode                      currentMode;
-   
+   private Mode currentMode;
+
    /** The kw map. */
    private Map<String, List<String>> kwMap;
-   
+
    /** The global font. */
    private Font globalFont;
 
    /**
     * Instantiates a new main context.
     */
-   private MainContext() {
+   private PThemeMainContext() {
       tables = new HashMap<>();
    }
 
@@ -85,16 +85,16 @@ public final class MainContext {
     *
     * @return the main context instance
     */
-   public static MainContext instance() {
+   public static PThemeMainContext instance() {
       if (context == null)
-         context = new MainContext();
+         context = new PThemeMainContext();
       return context;
    }
 
    /**
     * Inits the.
     *
-    * @param base the base
+    * @param base      the base
     * @param themeFile the theme file
     * @throws Exception the exception
     */
@@ -109,20 +109,20 @@ public final class MainContext {
       if (!Files.exists(Paths.get(themeFile))) {
          throw new Exception("Unable to initialize PThemeTools: not theme.txt");
       }
-      
+
       try {
          Field field = Theme.class.getDeclaredField("theme");
          field.setAccessible(true);
          settings = (Settings) field.get(null);
          Log.info("Settings available!");
-      } catch (NoSuchFieldException|SecurityException|IllegalArgumentException|IllegalAccessException e) {
+      } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
          Log.warning("Settings not available! :/");
-         throw new Exception("Settings not accessable! :/\n",e);
+         throw new Exception("Settings not accessable! :/\n", e);
       }
-      
+
       loadGlobalFont();
-      
-      properties = new OrderedProperties(themeFile);
+
+      properties = new PThemeProperties(themeFile);
       currentMode = editor.getMode();
       loadKeyWords();
    }
@@ -135,9 +135,9 @@ public final class MainContext {
          globalFont = Font.createFont(Font.TRUETYPE_FONT, is);
       } catch (FontFormatException | IOException e) {
          Log.debug("Unable to load font : ");
-      }      
+      }
    }
-   
+
    /**
     * Gets the global font.
     *
@@ -150,7 +150,7 @@ public final class MainContext {
    /**
     * Gets the font height.
     *
-    * @param c the c
+    * @param c    the c
     * @param font the font
     * @return the font height
     */
@@ -158,12 +158,12 @@ public final class MainContext {
       FontMetrics metrics = c.getFontMetrics(font);
       return metrics.getHeight();
    }
-   
+
    /**
     * Start file watcher.
     */
    public void startFileWatcher() {
-      fileWatcher = new FileWatcher(themeFile);
+      fileWatcher = new PThemeFileWatcher(themeFile);
       fileWatcher.start();
    }
 
@@ -172,7 +172,7 @@ public final class MainContext {
     *
     * @return the file watcher
     */
-   public FileWatcher getFileWatcher() {
+   public PThemeFileWatcher getFileWatcher() {
       return fileWatcher;
    }
 
@@ -181,7 +181,7 @@ public final class MainContext {
     *
     * @param fileWatcher the new file watcher
     */
-   public void setFileWatcher(FileWatcher fileWatcher) {
+   public void setFileWatcher(PThemeFileWatcher fileWatcher) {
       this.fileWatcher = fileWatcher;
    }
 
@@ -190,7 +190,7 @@ public final class MainContext {
     *
     * @return the theme properties
     */
-   public OrderedProperties getProperties() {
+   public PThemeProperties getProperties() {
       return properties;
    }
 
@@ -199,14 +199,14 @@ public final class MainContext {
     *
     * @param properties the new properties
     */
-   public void setProperties(OrderedProperties properties) {
+   public void setProperties(PThemeProperties properties) {
       this.properties = properties;
    }
 
    /**
     * Gets the base.
     *
-    * @return the processing base object 
+    * @return the processing base object
     */
    public Base getBase() {
       return base;
@@ -249,7 +249,7 @@ public final class MainContext {
     *
     * @return the main table
     */
-   public ThemeTable getTable(String name) {
+   public PThemeTable getTable(String name) {
       return tables.get(name);
    }
 
@@ -258,7 +258,7 @@ public final class MainContext {
     *
     * @param maintable the new main table
     */
-   public void addTable(ThemeTable table) {
+   public void addTable(PThemeTable table) {
       tables.put(table.getName(), table);
    }
 
@@ -306,8 +306,8 @@ public final class MainContext {
    public void reloadFile() throws Exception {
       properties.loadFile();
       Theme.loadSketchbookFile();
-      EventQueue.invokeLater(() -> { 
-         for (ThemeTable t : tables.values()) {
+      EventQueue.invokeLater(() -> {
+         for (PThemeTable t : tables.values()) {
             t.setEnabled(false);
             t.populateData();
             t.setEnabled(true);
@@ -320,16 +320,17 @@ public final class MainContext {
     * Load key words.
     */
    public void loadKeyWords() {
-      List<String> search = Arrays.asList("comment1", "comment2", "function1", "function2", "function3", "function4", "invalid", "keyword1", "keyword2", "keyword3", "keyword4","keyword5","keyword6","label","literal1","literal2","operator");
+      List<String> search = Arrays.asList("comment1", "comment2", "function1", "function2", "function3", "function4", "invalid", "keyword1", "keyword2", "keyword3", "keyword4", "keyword5", "keyword6",
+            "label", "literal1", "literal2", "operator");
       kwMap = new HashMap<>();
       String kwfile = editor.getMode().getFolder().getAbsolutePath() + "/keywords.txt";
       Log.debug("Try loading keywords form: " + kwfile);
       try (BufferedReader br = new BufferedReader(new FileReader(kwfile))) {
-         String line;         
+         String line;
          while ((line = br.readLine()) != null) {
             line = line.trim();
             if (line.startsWith("//") || line.startsWith("#"))
-               continue;            
+               continue;
             String[] parts = line.split("\\s+");
             if (parts.length > 1 && search.contains(parts[1].trim().toLowerCase())) {
                kwMap.computeIfAbsent(parts[1].trim().toLowerCase(), k -> new ArrayList<>()).add(parts[0].trim());
@@ -347,10 +348,10 @@ public final class MainContext {
     * @return true, if successful
     */
    public boolean hasInfo(String v) {
-      if (v==null)
+      if (v == null)
          return false;
       if (v.contains(".token.")) {
-         String id = v.trim().replaceAll("editor\\.token\\.([^\\.]+)\\.style", "$1");      
+         String id = v.trim().replaceAll("editor\\.token\\.([^\\.]+)\\.style", "$1");
          if (kwMap.get(id) != null) {
             return true;
          }
@@ -367,15 +368,14 @@ public final class MainContext {
    public String findToolTip(String v) {
       String ret = v;
       if (v.startsWith("editor.token")) {
-         String id = v.trim().replaceAll("editor\\.token\\.([^\\.]+)\\.style", "$1");      
+         String id = v.trim().replaceAll("editor\\.token\\.([^\\.]+)\\.style", "$1");
          if (kwMap.get(id) != null) {
-            ret = String.join("\n",kwMap.get(id));
+            ret = String.join("\n", kwMap.get(id));
          }
       }
       return ret;
    }
-   
-   
+
    /**
     * Checks if is active.
     *

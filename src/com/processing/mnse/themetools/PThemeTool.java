@@ -30,7 +30,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JOptionPane;
 
-import com.processing.mnse.themetools.common.MainContext;
+import com.processing.mnse.themetools.common.PThemeMainContext;
 import com.processing.mnse.themetools.gui.PThemePanel;
 import com.processing.mnse.themetools.logging.Log;
 
@@ -77,12 +77,12 @@ public class PThemeTool implements Tool {
          EventQueue.invokeLater(() -> {
             try {
                if (Integer.parseInt(version[0]) != 4 || Integer.parseInt(version[1]) < 2) {
-                  JOptionPane.showMessageDialog(null, "Sorry! ##tool.name## will not be loaded!\n##tool.name## needs Processing Version 4.2 or above!","Error",JOptionPane.ERROR_MESSAGE);
+                  JOptionPane.showMessageDialog(null, "Sorry! ##tool.name## will not be loaded!\n##tool.name## needs Processing Version 4.2 or above!", "Error", JOptionPane.ERROR_MESSAGE);
                   return;
-               }               
-               MainContext ctx;
-               if (MainContext.isActive()) {
-                  ctx = MainContext.instance();
+               }
+               PThemeMainContext ctx;
+               if (PThemeMainContext.isActive()) {
+                  ctx = PThemeMainContext.instance();
                   if (base.getActiveEditor().getMode().equals(ctx.getCurrentMode())) {
                      Log.warning("##tool.name## already active: " + base.getActiveEditor().getMode());
                      return;
@@ -90,9 +90,9 @@ public class PThemeTool implements Tool {
                   if (ctx.getMainPanel() != null) {
                      ctx.getMainPanel().dispose();
                   }
-                  MainContext.destroy();
+                  PThemeMainContext.destroy();
                }
-               ctx = MainContext.instance();
+               ctx = PThemeMainContext.instance();
                ctx.init(base, Theme.getSketchbookFile().getAbsolutePath());
                Log.debug("*** loading ##tool.name##!");
                ctx.setMainPanel(new PThemePanel(ctx));
@@ -101,7 +101,7 @@ public class PThemeTool implements Tool {
                Log.info("*** success initialized ##tool.name##!");
             } catch (Exception e) {
                Log.error("Error on initialize ##tool.name##: " + e.getMessage());
-               MainContext.destroy();                  
+               PThemeMainContext.destroy();
             }
          });
       } catch (Exception e) {
