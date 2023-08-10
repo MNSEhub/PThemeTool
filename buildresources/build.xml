@@ -251,7 +251,7 @@
    </target>
   
    <target name="clean-pre">
-      <delete dir="${project.dist}" />
+      <delete dir="${project.dist}/${project.name}-${tool.prettyVersion}" />
       <delete dir="${project.bin}" />
       <delete dir="${project.tmp}" />
    </target>
