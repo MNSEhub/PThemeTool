@@ -208,8 +208,8 @@
 						<id>attach-javadocs</id>
 						<goals>
 							<goal>jar</goal>
-						</goals>
-						<configuration>
+						</goals>						
+						<configuration>							
 							<bottom>Processing tool ${project.name} by ${author.name}. ${tool.copyright}</bottom>
 							<verbose>true</verbose>
 							<docencoding>utf-8</docencoding>
@@ -221,6 +221,7 @@
 								<link>${javadoc.java.href}</link>
 								<link>${javadoc.processing.href}</link>
 							</links>
+							<notimestamp>true</notimestamp>
 						</configuration>
 					</execution>
 				</executions>
