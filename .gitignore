@@ -2,4 +2,5 @@
 .project
 .settings/**
 bin/**
-buildresources/build-local.properties
+distribution/**
+target/**

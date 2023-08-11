@@ -1,0 +1,25 @@
+-classpath
+'C:/Develop/processing4/lib/pde.jar;C:/Develop/processing4/core/library/core.jar'
+-encoding
+'UTF-8'
+-public
+-sourcepath
+'C:/Develop/workspace_2023/PThemeTool/target/generated-sources;C:/Develop/workspace_2023/PThemeTool/target/generated-sources/annotations'
+-verbose
+-bottom
+'Processing tool PThemeTool by mnse. (c) 2023'
+-charset
+'utf-8'
+-d
+'C:/Develop/workspace_2023/PThemeTool/target/apidocs'
+-docencoding
+'utf-8'
+-doctitle
+'PThemeTool - API Documentation by mnse.'
+-link
+'https://docs.oracle.com/en/java/javase/17/docs/api'
+-link
+'https://processing.github.io/processing-javadocs/everything'
+-use
+-windowtitle
+'PThemeTool - API Documentation by mnse.'
