@@ -110,6 +110,9 @@
 								<copy todir="${project.basedir}/docs/reference">
 									<fileset dir="${project.build.directory}/apidocs" includes="**/*" />
 								</copy>
+								<replaceregexp match='&lt;meta name="dc.created" content="[^"]*"&gt;' replace="" flags="g" byline="true">
+									<fileset dir="${project.basedir}/docs/reference" includes="**/*.html"/>
+								</replaceregexp>								
 								<copy file="${project.build.directory}/generated-sources/index.html" todir="${project.basedir}/docs/" />
 								<copy file="${project.build.directory}/generated-sources/stylesheet.css" todir="${project.basedir}/docs/" />
 								<copy file="${project.build.directory}/${project.artifactId}-${project.version}.zip" todir="${project.basedir}/docs/download" />

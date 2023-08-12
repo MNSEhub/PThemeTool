@@ -59,9 +59,16 @@ echo found Processing core.jar "
 REM Install pde.jar to the local maven repository
 pushd %TEMP%
 call mvn -N install:install-file -Dfile="%PROCESSING_DIR%\lib\pde.jar" -DgroupId=processing.org -DartifactId=pde-jar -Dversion=%PROCESSING_VERSION% -Dpackaging=jar
-
+if %ERRORLEVEL% neq 0 (
+	echo Error during mvn install:install-file!
+	exit /b 1
+)    
 REM Install core.jar to the local maven repository
 call mvn -N install:install-file -Dfile="%PROCESSING_DIR%\core\library\core.jar" -DgroupId=processing.org -DartifactId=core-jar -Dversion=%PROCESSING_VERSION% -Dpackaging=jar
+if %ERRORLEVEL% neq 0 (
+	echo Error during mvn install:install-file!
+	exit /b 1
+)    
 popd
 echo Both JAR files installed successfully!
 
@@ -84,6 +91,10 @@ REM Check if version is set
 IF NOT "%VERSION_VALUE%"=="" (
 	echo set version %VERSION_VALUE% to pom.xml 
     call mvn versions:set -DnewVersion=%VERSION_VALUE%
+	if %ERRORLEVEL% neq 0 (
+    	echo Error during mvn install:install-file!
+    	exit /b 1
+	)    
 ) ELSE (
     echo "Version not found in properties file?!"
 )
