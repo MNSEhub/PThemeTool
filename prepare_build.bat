@@ -1,6 +1,11 @@
 @echo off
 setlocal enabledelayedexpansion
 
+REM # This will install the processing pde.jar and core.jar to the local maven repo 
+REM # that it can be regular referenced in the pom
+REM # it sets also the version in pom to the tool.version from tool.properties 
+
+
 REM Get command line argument for the processing base directory
 set PROCESSING_DIR=%1
 
