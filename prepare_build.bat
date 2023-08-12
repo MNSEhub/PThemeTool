@@ -60,13 +60,13 @@ REM Install pde.jar to the local maven repository
 pushd %TEMP%
 call mvn -N install:install-file -Dfile="%PROCESSING_DIR%\lib\pde.jar" -DgroupId=processing.org -DartifactId=pde-jar -Dversion=%PROCESSING_VERSION% -Dpackaging=jar
 if %ERRORLEVEL% neq 0 (
-	echo Error during mvn install:install-file!
+	echo Error during mvn install:install-file pde.jar!
 	exit /b 1
 )    
 REM Install core.jar to the local maven repository
 call mvn -N install:install-file -Dfile="%PROCESSING_DIR%\core\library\core.jar" -DgroupId=processing.org -DartifactId=core-jar -Dversion=%PROCESSING_VERSION% -Dpackaging=jar
 if %ERRORLEVEL% neq 0 (
-	echo Error during mvn install:install-file!
+	echo Error during mvn install:install-file core.jar!
 	exit /b 1
 )    
 popd
@@ -92,7 +92,7 @@ IF NOT "%VERSION_VALUE%"=="" (
 	echo set version %VERSION_VALUE% to pom.xml 
     call mvn versions:set -DnewVersion=%VERSION_VALUE%
 	if %ERRORLEVEL% neq 0 (
-    	echo Error during mvn install:install-file!
+    	echo Error during mvn versions:set!
     	exit /b 1
 	)    
 ) ELSE (
