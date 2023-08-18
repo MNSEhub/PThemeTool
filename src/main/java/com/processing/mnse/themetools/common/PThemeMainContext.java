@@ -17,7 +17,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import com.processing.mnse.themetools.PThemeTool;
 import com.processing.mnse.themetools.gui.PThemePanel;
 import com.processing.mnse.themetools.logging.Log;
 import com.processing.mnse.themetools.table.PThemeTable;
@@ -48,6 +50,9 @@ public final class PThemeMainContext {
 
    /** The properties. */
    private PThemeProperties properties;
+
+   /** The properties. */
+   private Properties tooltipprops;
 
    /** The base. */
    private Base base;
@@ -378,8 +383,26 @@ public final class PThemeMainContext {
       } catch (IOException e) {
          Log.debug("errors reading keywords: " + kwfile);
       }
+      loadHelp();
    }
 
+   /**
+    * Load key words.
+    */
+   public void loadHelp() {
+      tooltipprops = new Properties();
+      try (InputStream is = getClass().getResourceAsStream("/help.properties")) {
+         tooltipprops.load(is);
+         tooltipprops.entrySet().removeIf(entry -> {
+            String value = (String) entry.getValue();
+            return value == null || value.trim().isEmpty();
+        });
+        Log.debug("help properties loaded");
+      } catch(Exception e) {
+         Log.debug("unable to load help properties");
+      }
+   }
+   
    /**
     * Checks for info.
     *
@@ -411,6 +434,8 @@ public final class PThemeMainContext {
          if (kwMap.get(id) != null) {
             ret = String.join("\n", kwMap.get(id));
          }
+      } else if (tooltipprops != null) {
+         ret=tooltipprops.getProperty(v,v);
       }
       return ret;
    }

@@ -51,7 +51,7 @@ public class PThemeExitDialog extends JDialog {
       super(PThemeMainContext.instance().getEditor() ,true);
       setUndecorated(true);
 
-      String lbl = "Action required!";
+      String lbl = " Action required!";
       
       JPanel exitPanel = new JPanel(new BorderLayout());
 
@@ -75,6 +75,7 @@ public class PThemeExitDialog extends JDialog {
       headerPanel.setPreferredSize(new Dimension(300, 30));
       headerPanel.setMaximumSize(new Dimension(300, 30));
       headerPanel.setSize(new Dimension(300, 30));
+      headerPanel.setBorder(BorderFactory.createMatteBorder(0,0,1,0,Theme.getColor("header.text.selected.color")));
       headerPanel.setBackground(Theme.getColor(PThemeToolsHelper.JPANEL_BGCOLOR_ATTR));
 
       JLabel header = new JLabel(lbl);
@@ -91,20 +92,20 @@ public class PThemeExitDialog extends JDialog {
       contentPanel.setSize(new Dimension(300, 100));
       contentPanel.setBackground(Theme.getColor(PThemeToolsHelper.JPANEL_BGCOLOR_ATTR));
 
-      JLabel content = new JLabel("You've unsaved changes, what to do ?");
+      JLabel content = new JLabel(" You've unsaved changes, what to do ?");
       content.setForeground(Theme.getColor(PThemeToolsHelper.JLABEL_FGCOLOR_ATTR));
       contentPanel.add(content);
       exitPanel.add(contentPanel, BorderLayout.CENTER);      
 
       // buttons      
-      JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 2)) {
+      JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 3)) {
          @Override
          protected void paintComponent(Graphics g) {
             setBackground(Theme.getColor("editor.gradient.bottom"));
             super.paintComponent(g);
          }
       };
-      buttonPanel.setBorder(BorderFactory.createEmptyBorder());
+      buttonPanel.setBorder(BorderFactory.createMatteBorder(1,0,0,0,Theme.getColor("header.text.selected.color")));
 
       JButton btnSave = new JButton("Save") {
          @Override
