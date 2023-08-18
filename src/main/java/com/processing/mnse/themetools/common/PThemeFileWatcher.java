@@ -51,7 +51,7 @@ public final class PThemeFileWatcher implements Runnable {
    public PThemeFileWatcher(String fname) {
       trackedFilename = Paths.get(fname).getFileName();
       path = Paths.get(fname).getParent();
-      Log.info("tracking: " + trackedFilename + " in path " + path);
+      Log.debug("tracking: " + trackedFilename + " in path " + path);
    }
 
    /**
@@ -106,11 +106,13 @@ public final class PThemeFileWatcher implements Runnable {
     * Reload trigger theme file.
     */
    private void reloadFile() {
+      if (!running)
+         return;
       try {
          Log.debug("Reloading file");
          PThemeMainContext.instance().reloadFile();
       } catch (Exception e) {
-         Log.error("Issues loading file !?");
+         Log.debug("Issues loading file !?");
       }
    }
 

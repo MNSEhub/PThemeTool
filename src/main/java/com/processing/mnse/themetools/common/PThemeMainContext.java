@@ -17,7 +17,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import com.processing.mnse.themetools.PThemeTool;
 import com.processing.mnse.themetools.gui.PThemePanel;
 import com.processing.mnse.themetools.logging.Log;
 import com.processing.mnse.themetools.table.PThemeTable;
@@ -49,6 +51,9 @@ public final class PThemeMainContext {
    /** The properties. */
    private PThemeProperties properties;
 
+   /** The properties. */
+   private Properties tooltipprops;
+
    /** The base. */
    private Base base;
 
@@ -72,6 +77,9 @@ public final class PThemeMainContext {
 
    /** The global font. */
    private Font globalFont;
+
+   /** is dirty flag. */
+   private boolean isDirty;
 
    /**
     * Instantiates a new main context.
@@ -114,9 +122,8 @@ public final class PThemeMainContext {
          Field field = Theme.class.getDeclaredField("theme");
          field.setAccessible(true);
          settings = (Settings) field.get(null);
-         Log.info("Settings available!");
+         Log.debug("Settings available!");
       } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-         Log.warning("Settings not available! :/");
          throw new Exception("Settings not accessable! :/\n", e);
       }
 
@@ -185,6 +192,26 @@ public final class PThemeMainContext {
       this.fileWatcher = fileWatcher;
    }
 
+   /**
+    * Gets the is dirty flag.
+    *
+    * @return the is dirty flag
+    */
+   public boolean getIsDirty() {
+      return isDirty;
+   }
+
+   /**
+    * Sets the is dirty flag.
+    *
+    * @param isdirty the new is dirty state
+    */
+   public void setIsDirty(boolean isdirty) {
+      Log.debug("setIsDirty from " + isDirty + " to " + isdirty);
+      isDirty = isdirty;
+      //mainpanel.updateHeader();
+   }
+   
    /**
     * Gets the properties.
     *
@@ -354,10 +381,28 @@ public final class PThemeMainContext {
             }
          }
       } catch (IOException e) {
-         Log.warning("errors reading keywords: " + kwfile);
+         Log.debug("errors reading keywords: " + kwfile);
       }
+      loadHelp();
    }
 
+   /**
+    * Load key words.
+    */
+   public void loadHelp() {
+      tooltipprops = new Properties();
+      try (InputStream is = getClass().getResourceAsStream("/help.properties")) {
+         tooltipprops.load(is);
+         tooltipprops.entrySet().removeIf(entry -> {
+            String value = (String) entry.getValue();
+            return value == null || value.trim().isEmpty();
+        });
+        Log.debug("help properties loaded");
+      } catch(Exception e) {
+         Log.debug("unable to load help properties");
+      }
+   }
+   
    /**
     * Checks for info.
     *
@@ -389,6 +434,8 @@ public final class PThemeMainContext {
          if (kwMap.get(id) != null) {
             ret = String.join("\n", kwMap.get(id));
          }
+      } else if (tooltipprops != null) {
+         ret=tooltipprops.getProperty(v,v);
       }
       return ret;
    }

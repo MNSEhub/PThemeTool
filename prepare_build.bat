@@ -45,21 +45,21 @@ if %MAJOR_VERSION% equ 4 (
     )
 )
 
-echo Processing version version is valid: %MAJOR_VERSION%.%MINOR_VERSION%.%PATCH_VERSION%"
+echo Processing version version is valid: %MAJOR_VERSION%.%MINOR_VERSION%.%PATCH_VERSION%
 
 REM Check if lib/pde.jar exists in the given directory
 if not exist "%PROCESSING_DIR%\lib\pde.jar" (
     echo pde.jar not found in the provided directory: %PROCESSING_DIR%\lib\pde.jar
     exit /b 1
 )
-echo found Processing pde.jar "
+echo found Processing pde.jar
 
 REM Check if core/library/core.jar exists in the given directory
 if not exist "%PROCESSING_DIR%\core\library\core.jar" (
     echo core.jar not found in the provided directory: %PROCESSING_DIR%\core\library\core.jar
     exit /b 1
 )
-echo found Processing core.jar "
+echo found Processing core.jar
 
 REM Install pde.jar to the local maven repository
 pushd %TEMP%
@@ -100,8 +100,9 @@ IF NOT "%VERSION_VALUE%"=="" (
     	echo Error during mvn versions:set!
     	exit /b 1
 	)    
+    call mvn versions:commit
 ) ELSE (
-    echo "Version not found in properties file?!"
+    echo Version not found in properties file?!
 )
 
 endlocal

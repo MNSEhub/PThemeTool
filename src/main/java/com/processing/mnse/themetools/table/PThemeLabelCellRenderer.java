@@ -10,6 +10,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
 
+import com.processing.mnse.themetools.common.PThemeMainContext;
 import com.processing.mnse.themetools.common.PThemeToolsHelper;
 
 import processing.app.ui.Theme;

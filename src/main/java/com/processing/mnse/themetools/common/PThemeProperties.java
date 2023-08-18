@@ -85,9 +85,10 @@ public final class PThemeProperties extends Properties {
    public void loadFile() throws Exception {
       Log.debug("Try loading style properties of: " + filename);
       try (FileInputStream fis = new FileInputStream(this.filename)) {
-         load(fis);
+         load(fis);         
       }
       print();
+      PThemeMainContext.instance().setIsDirty(false);
       Log.debug("properties loaded from: " + filename);
    }
 
@@ -100,6 +101,7 @@ public final class PThemeProperties extends Properties {
       PThemeMainContext.instance().getSettings().set(tableEntry.getLabel(), tableEntry.createPropertyValue());
       PThemeMainContext.instance().getBase().updateTheme();
       PThemeMainContext.instance().getEditor().invalidate();
+      PThemeMainContext.instance().setIsDirty(true);
    }
 
    /**
@@ -116,6 +118,7 @@ public final class PThemeProperties extends Properties {
       PThemeMainContext.instance().getEditor().invalidate();
       try {
          PThemeMainContext.instance().updateTables();
+         PThemeMainContext.instance().setIsDirty(false);
       } catch(Exception e) {
          Log.warning("issues on revert tables!?");
       }

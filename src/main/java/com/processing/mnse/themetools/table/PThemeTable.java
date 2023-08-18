@@ -94,6 +94,8 @@ public final class PThemeTable extends JTable {
       String lbl = (String) getModel().getValueAt(rowIndex, 0);
       if (colIndex == 0 && PThemeMainContext.instance().hasInfo(lbl)) {
          lbl += "\n" + "click for more info";
+      } else if (colIndex == 0) {
+         lbl = PThemeMainContext.instance().findToolTip(lbl);
       }
       return lbl;
    }

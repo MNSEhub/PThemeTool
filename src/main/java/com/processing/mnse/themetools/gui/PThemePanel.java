@@ -20,6 +20,7 @@ import javax.swing.plaf.basic.BasicPanelUI;
 
 import com.processing.mnse.themetools.common.PThemeMainContext;
 import com.processing.mnse.themetools.common.PThemeToolsHelper;
+import com.processing.mnse.themetools.logging.Log;
 import com.processing.mnse.themetools.table.PThemeTable;
 
 import processing.app.laf.PdeScrollBarUI;
@@ -71,7 +72,7 @@ public final class PThemePanel extends JPanel {
     *
     * @return the JPanel
     */
-   public JPanel createLabel() {
+   public JPanel createLabel() {      
       JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 2)) {
          @Override
          protected void paintComponent(Graphics g) {
@@ -95,6 +96,11 @@ public final class PThemePanel extends JPanel {
          protected void paintComponent(Graphics g) {
             setBackground(Theme.getColor("editor.gradient.top"));
             setForeground(PThemeToolsHelper.getContrastColor(getBackground()));
+            if (ctx.getIsDirty()) {
+               setText("Processing Theme Editor *");               
+            } else {
+               setText("Processing Theme Editor");   
+            }            
             super.paintComponent(g);
          }
       };
@@ -131,6 +137,7 @@ public final class PThemePanel extends JPanel {
          @Override
          public void actionPerformed(ActionEvent e) {
             Theme.save();
+            ctx.setIsDirty(false);
          }
       });
       buttonPanel.add(btnSave);
@@ -163,11 +170,24 @@ public final class PThemePanel extends JPanel {
       btnClose.addActionListener(new ActionListener() {
          @Override
          public void actionPerformed(ActionEvent e) {
+            Log.debug("Close dirty Status: " + ctx.getIsDirty());
+            if (ctx.getIsDirty()) {
+               PThemeExitDialog whattodo = new PThemeExitDialog(PThemePanel.this);
+               if (whattodo.wantsToSave()) {
+                  Log.debug("save on close");
+                  ctx.getFileWatcher().stop();
+                  Theme.save();
+               } else {
+                  Log.debug("revert on close");
+                  Theme.reload();
+                  PThemeMainContext.instance().getBase().updateTheme();
+                  PThemeMainContext.instance().getEditor().invalidate();                  
+               }
+            }
             dispose();
          }
       });
       buttonPanel.add(btnClose);
-
       return buttonPanel;
    }
 
@@ -204,6 +224,11 @@ public final class PThemePanel extends JPanel {
       return tablePanel;
    }
 
+//   public void updateHeader() {
+//      if (headerPanel != null)
+//         headerPanel.repaint();
+//   }
+   
    /**
     * Dispose dialog panel.
     */
