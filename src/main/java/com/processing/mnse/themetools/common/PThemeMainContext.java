@@ -73,6 +73,9 @@ public final class PThemeMainContext {
    /** The global font. */
    private Font globalFont;
 
+   /** is dirty flag. */
+   private boolean isDirty;
+
    /**
     * Instantiates a new main context.
     */
@@ -114,9 +117,8 @@ public final class PThemeMainContext {
          Field field = Theme.class.getDeclaredField("theme");
          field.setAccessible(true);
          settings = (Settings) field.get(null);
-         Log.info("Settings available!");
+         Log.debug("Settings available!");
       } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-         Log.warning("Settings not available! :/");
          throw new Exception("Settings not accessable! :/\n", e);
       }
 
@@ -185,6 +187,26 @@ public final class PThemeMainContext {
       this.fileWatcher = fileWatcher;
    }
 
+   /**
+    * Gets the is dirty flag.
+    *
+    * @return the is dirty flag
+    */
+   public boolean getIsDirty() {
+      return isDirty;
+   }
+
+   /**
+    * Sets the is dirty flag.
+    *
+    * @param isdirty the new is dirty state
+    */
+   public void setIsDirty(boolean isdirty) {
+      Log.debug("setIsDirty from " + isDirty + " to " + isdirty);
+      isDirty = isdirty;
+      //mainpanel.updateHeader();
+   }
+   
    /**
     * Gets the properties.
     *
@@ -354,7 +376,7 @@ public final class PThemeMainContext {
             }
          }
       } catch (IOException e) {
-         Log.warning("errors reading keywords: " + kwfile);
+         Log.debug("errors reading keywords: " + kwfile);
       }
    }
 

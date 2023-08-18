@@ -84,7 +84,7 @@ public class PThemeTool implements Tool {
                if (PThemeMainContext.isActive()) {
                   ctx = PThemeMainContext.instance();
                   if (base.getActiveEditor().getMode().equals(ctx.getCurrentMode())) {
-                     Log.warning("##tool.name## already active: " + base.getActiveEditor().getMode());
+                     Log.debug("##tool.name## already active: " + base.getActiveEditor().getMode());
                      return;
                   }
                   if (ctx.getMainPanel() != null) {

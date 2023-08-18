@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 import com.processing.mnse.themetools.common.PThemeToolsHelper;
 
+import processing.app.Preferences;
+
 /**
  * The Class Log.
  * logging class
@@ -21,7 +23,10 @@ public final class Log {
    /** The Constant logger. */
    private static final Logger logger = Logger.getLogger("##project.name##");
 
-   static {
+   private static boolean override_debug;
+   
+   static {      
+      override_debug = Boolean.parseBoolean(Preferences.get("mnse.themetool.debug"));      
       ConsoleHandler handler = new ConsoleHandler();
       handler.setFormatter(new CustomFormatter());
       logger.addHandler(handler);
@@ -34,7 +39,10 @@ public final class Log {
     * @param msg the message
     */
    public static void debug(String msg) {
-      logger.log(Level.FINE, msg);
+      if (override_debug)
+         info(msg);
+      else
+         logger.log(Level.FINE, msg);
    }
 
    /**

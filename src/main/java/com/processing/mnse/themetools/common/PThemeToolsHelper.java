@@ -1,7 +1,9 @@
 package com.processing.mnse.themetools.common;
 
 import java.awt.Color;
+import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Collections;
 
 /**
  * The Class PThemeToolsHelper.
@@ -61,7 +63,7 @@ public final class PThemeToolsHelper {
 
    /** The visible Items groups. */
    @SuppressWarnings("serial")
-   public static final LinkedHashMap<String, String[]> GROUP_ITEMS = new LinkedHashMap<>() {
+   public static final Map<String, String[]> GROUP_ITEMS = Collections.unmodifiableMap(new LinkedHashMap<>() {
       {
          put("Code Tokens", new String[] { "^editor\\.token\\..*style$"});
          put("Editor", new String[] { "^editor\\.(?!token).*(color|style|bottom|top|background|field|glyph)$"});
@@ -74,7 +76,7 @@ public final class PThemeToolsHelper {
          put("Status", new String[] { "^status\\..*(color|style|bottom|top|background|field|glyph)$"});
          put("Other", new String[] { "^(laf|run|toolbar|label)\\..*(color|style|bottom|top|background|field|glyph)$"});
       }
-   };
+   });
 
    /**
     * Gets the contrast color.
