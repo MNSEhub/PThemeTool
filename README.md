@@ -27,9 +27,7 @@ remove the PThemeTool folder from sketchbook/tool directory.
 [github.io pages](https://mnsehub.github.io/PThemeTool/)
 
 ## Example Video
-https://github.com/MNSEhub/PThemeTool/assets/141053966/b1fe7a5c-f8ed-49da-8d2f-acd45efdd1de
-
-
+https://github.com/MNSEhub/PThemeTool/assets/141053966/003682d4-1233-4b1e-9650-73d9aaf458ab
 
 ## TODO
 * add further documentation
