@@ -4,7 +4,7 @@
 > **_Requires Processing 4.2+_**
 
 ## Download
-[PThemeTool-1.0.0 from releases](https://github.com/MNSEhub/PThemeTool/releases)
+[PThemeTool-1.0.1 from releases](https://github.com/MNSEhub/PThemeTool/releases)
 
 ## Installation
 extract the zip file to the processing sketchbook/tool directory.
