@@ -27,7 +27,11 @@ package com.processing.mnse.themetools;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.processing.mnse.themetools.common.PThemeMainContext;
@@ -72,6 +76,8 @@ public class PThemeTool implements Tool {
     */
    public void run() {
       Log.info("Processing Version: " + Base.getVersionName() + " Rev: " + Base.getRevision());
+      Dimension od = base.getActiveEditor().getSize();
+      Log.debug("Editor: height=" + base.getActiveEditor().getHeight());
       final String[] version = Base.getVersionName().split("\\.");
       try {
          EventQueue.invokeLater(() -> {
@@ -98,6 +104,14 @@ public class PThemeTool implements Tool {
                ctx.setMainPanel(new PThemePanel(ctx));
                ctx.getEditor().add(ctx.getMainPanel(), BorderLayout.EAST);
                ctx.getEditor().pack();
+               int w = (int) Math.min(od.getWidth()+ctx.getMainPanel().getWidth(),Toolkit.getDefaultToolkit().getScreenSize().getWidth());
+               od.setSize(w, od.getHeight());
+               ctx.getEditor().setSize(od);
+               if ((ctx.getEditor().getExtendedState() & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH) {
+                  ctx.getEditor().setExtendedState(JFrame.MAXIMIZED_BOTH);
+               }                              
+               ctx.getEditor().setLocationRelativeTo(null);               
+               Log.debug("Editor: height=" + base.getActiveEditor().getHeight());
                Log.info("*** success initialized ##tool.name##!");
             } catch (Exception e) {
                Log.error("Error on initialize ##tool.name##: " + e.getMessage());
